@@ -1,8 +1,37 @@
 import { Award, BookOpen, Clock, GraduationCap, Microscope, Users } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
+import ReactModal from 'react-modal';
 import { facultyInfo } from '../data/facultyData';
 
+// Import images directly
+import bulusmaImage from '../assets/buluşma.jpg';
+import mcbuImage from '../assets/mcbu.jpg';
+import okulImage from '../assets/okulI.jpg';
+
+// Modal için gerekli ayar
+ReactModal.setAppElement('#root');
+
 const Home = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const galleryImages = [
+    { 
+      src: okulImage, 
+      alt: "Megan Patch Youngly",
+      caption: "Megan Patch Youngly"
+    },
+    { 
+      src: mcbuImage, 
+      alt: "Mezuniyet Forenimiz",
+      caption: "Mezuniyet Forenimiz"
+    },
+    { 
+      src: bulusmaImage, 
+      alt: "Manis Marisa Por Bar",
+      caption: "Manis Marisa Por Bar"
+    }
+  ];
+
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -47,6 +76,29 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Geliştirilmiş Galeri Bölümü */}
+      <div className="gallery-section">
+        <h2 className="section-title">Galeri</h2>
+        <p className="section-subtitle">Fakültemizden en güzel anlar</p>
+        
+        <div className="gallery-grid">
+          {galleryImages.map((image, index) => (
+            <div 
+              key={index} 
+              className="gallery-item"
+              onClick={() => setSelectedImage(image)}
+            >
+              <img 
+                src={image.src} 
+                alt={image.alt} 
+                className="gallery-image" 
+              />
+              <div className="image-caption">{image.caption}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Highlights Section */}
       <div className="highlights-section">
         <h2 className="section-title">Fakülte Öne Çıkanlar</h2>
@@ -71,6 +123,33 @@ const Home = () => {
           ))}
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      <ReactModal
+        isOpen={!!selectedImage}
+        onRequestClose={() => setSelectedImage(null)}
+        className="modal"
+        overlayClassName="overlay"
+        closeTimeoutMS={200}
+      >
+        {selectedImage && (
+          <div className="modal-content">
+            <img 
+              src={selectedImage.src} 
+              alt={selectedImage.alt} 
+              className="modal-image"
+            />
+            <p className="modal-caption">{selectedImage.caption}</p>
+            <button 
+              onClick={() => setSelectedImage(null)}
+              className="modal-close"
+              aria-label="Close modal"
+            >
+              ×
+            </button>
+          </div>
+        )}
+      </ReactModal>
     </div>
   );
 };
